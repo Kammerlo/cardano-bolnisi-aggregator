@@ -65,7 +65,7 @@ public class BolnisiProcessor {
         String rawData = ((UnicodeString) metadata.get(new UnicodeString(Constants.CID_TAG))).getString();
         java.util.Map<String, List<Cid>> offChainData = getOffChainData(rawData);
 
-        wineryRepository.saveAll(offChainData.keySet().stream().map(Winery::new).collect(Collectors.toList()));
+        wineryRepository.saveAll(offChainData.keySet().stream().map(Winery::new).toList());
 
         int numberOfBottles = getSumOfBottlesForCID(offChainData);
         aggregationDTO.setNumberOfBottles(numberOfBottles);
@@ -81,12 +81,14 @@ public class BolnisiProcessor {
         for (String key : keys) {
             List<Cid> cids = offchainData.get(key);
             for (Cid cid : cids) {
-                // due to write errors the same lot number can be written multiple times
-                // we need to check for duplicates within one transaction
-                if(lotNumberPair.add(cid.getLotNumber()))
+                // due to write errors the same lot number can be included within the same transaction
+                // we need to check for duplicates within one transaction and add the number of bottles only once
+                if(lotNumberPair.add(cid.getLotNumber())) {
                     sumBottles += cid.getNumberOfBottles();
-                else
+                }
+                else {
                     log.info("Duplicate lot number found: {}", cid.getLotNumber());
+                }
             }
         }
 
