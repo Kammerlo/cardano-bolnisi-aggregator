@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -75,12 +76,20 @@ public class BolnisiProcessor {
     private int getSumOfBottlesForCID(java.util.Map<String, List<Cid>> offchainData) {
         int sumBottles = 0;
         Set<String> keys = offchainData.keySet();
+        Set<String> lotNumberPair = new HashSet<>();
+
         for (String key : keys) {
             List<Cid> cids = offchainData.get(key);
             for (Cid cid : cids) {
-                sumBottles += cid.getNumberOfBottles();
+                // due to write errors the same lot number can be written multiple times
+                // we need to check for duplicates within one transaction
+                if(lotNumberPair.add(cid.getLotNumber()))
+                    sumBottles += cid.getNumberOfBottles();
+                else
+                    log.info("Duplicate lot number found: {}", cid.getLotNumber());
             }
         }
+
         return sumBottles;
     }
 
