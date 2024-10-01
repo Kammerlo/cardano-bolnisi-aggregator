@@ -18,8 +18,8 @@ jobs:
         run: |
           git config --global user.email "thomas.kammerlocher@cardanofoundation.org"
           git config --global user.name "Thomas Kammerlocher"
-          git pull origin feat/docker-push
           git config pull.rebase true
+          git pull origin feat/docker-push
           git add pom.xml
           git commit -m "Upgrading Pom.xml"
           git push origin HEAD:feat/docker-push
