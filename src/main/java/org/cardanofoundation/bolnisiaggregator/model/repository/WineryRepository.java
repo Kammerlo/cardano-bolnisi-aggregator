@@ -9,4 +9,5 @@ public interface WineryRepository extends JpaRepository<Winery, String> {
 
     @Query("SELECT COUNT(w) FROM Winery w")
     int countAll();
+
 }

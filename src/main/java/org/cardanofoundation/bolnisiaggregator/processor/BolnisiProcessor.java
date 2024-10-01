@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -95,8 +96,19 @@ public class BolnisiProcessor {
         verifyLotSignature(wineries);
 
         // saving all Wineries, these will be used to calculate the total number of wineries
-        wineryRepository.saveAll(wineries.keySet().stream().map(Winery::new).toList());
+        saveWineries(wineries.keySet());
         return getSumOfBottlesForCID(wineries);
+    }
+
+    private void saveWineries(Set<String> wineries) {
+        wineries.forEach(wineryId -> {
+            try {
+                Winery winery = wineryRepository.findById(wineryId).orElse(new Winery(wineryId));
+                wineryRepository.saveAndFlush(winery);
+            } catch (Exception e) {
+                log.error("Error saving winery with ID: {}", wineryId, e);
+            }
+        });
     }
 
     private static Map<String, WineryData> mapMetadataAndOffChainDataToObject(co.nstant.in.cbor.model.Map metadata, HashMap offChainData) {
