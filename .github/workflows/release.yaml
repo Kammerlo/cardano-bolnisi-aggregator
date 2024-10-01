@@ -15,6 +15,8 @@ jobs:
         run: mvn -B versions:set -DnewVersion=0.0.1 -DgenerateBackupPoms=false
       - name: Push Pom
         run: |
+          git config --global user.email "thomas.kammerlocher@cardanofoundation.org"
+          git config --global user.name "Thomas Kammerlocher"
           git add pom.xml
           git commit -m "Upgrading Pom.xml"
           git push
