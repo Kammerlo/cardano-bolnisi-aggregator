@@ -17,3 +17,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build Docker Image
         run: docker build -t kammerlo/bolnisi-agg:latest .
+      - name: Push Docker Image
+        run: docker push kammerlo/bolnisi-agg:latest
