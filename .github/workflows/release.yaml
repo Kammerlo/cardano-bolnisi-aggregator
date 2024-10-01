@@ -19,7 +19,7 @@ jobs:
           git config --global user.name "Thomas Kammerlocher"
           git add pom.xml
           git commit -m "Upgrading Pom.xml"
-          git push
+          git push origin HEAD:feat/docker-push
 #      - name: Login to Docker Hub
       #        uses: docker/login-action@v3
       #        with:
