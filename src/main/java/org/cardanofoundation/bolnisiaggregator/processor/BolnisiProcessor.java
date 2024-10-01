@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import org.cardanofoundation.bolnisiaggregator.model.entity.Winery;
-import org.cardanofoundation.bolnisiaggregator.model.repository.WineryRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -33,6 +31,8 @@ import org.cardanofoundation.bolnisiaggregator.common.CryptoUtil;
 import org.cardanofoundation.bolnisiaggregator.model.domain.Lot;
 import org.cardanofoundation.bolnisiaggregator.model.domain.NumberOfBottlesAndCerts;
 import org.cardanofoundation.bolnisiaggregator.model.domain.WineryData;
+import org.cardanofoundation.bolnisiaggregator.model.entity.Winery;
+import org.cardanofoundation.bolnisiaggregator.model.repository.WineryRepository;
 
 @Component
 @RequiredArgsConstructor
