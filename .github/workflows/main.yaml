@@ -3,7 +3,6 @@ name: Build main branch
 on:
   push:
     branches: [ main ]
-  pull_request:
 
 jobs:
   build:
@@ -17,6 +16,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build Docker Image
-        run: docker build -t kammerlo/bolnisi-agg:latest .
+        run: docker build -t kammerlo/cardano-bolnisi-aggregator:latest .
       - name: Push Docker Image
-        run: docker push kammerlo/bolnisi-agg:latest
+        run: docker push kammerlo/cardano-bolnisi-aggregator:latest
