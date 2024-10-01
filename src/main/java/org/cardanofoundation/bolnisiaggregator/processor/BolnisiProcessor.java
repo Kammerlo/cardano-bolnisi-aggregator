@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -103,8 +104,13 @@ public class BolnisiProcessor {
     private void saveWineries(Set<String> wineries) {
         wineries.forEach(wineryId -> {
             try {
-                Winery winery = wineryRepository.findById(wineryId).orElse(new Winery(wineryId));
-                wineryRepository.saveAndFlush(winery);
+                wineryRepository.flush();
+                Optional<Winery> byId = wineryRepository.findByWineryId(wineryId);
+                if(byId.isPresent()) {
+                    log.info("Winery with ID: {} already exists", wineryId);
+                    return;
+                }
+                wineryRepository.saveAndFlush(Winery.builder().wineryId(wineryId).build());
             } catch (Exception e) {
                 log.error("Error saving winery with ID: {}", wineryId, e);
             }
@@ -127,8 +133,12 @@ public class BolnisiProcessor {
                 String signature = HexUtil.encodeHexString(signatureBytes.getBytes());
 
                 LinkedHashMap<String, Object> linkedHashMap = ((ArrayList<LinkedHashMap<String, Object>>) offChainData.get(key.toString())).get(i);
-                Lot lot = new Lot(signature, (int)linkedHashMap.get("number_of_bottles"), false, linkedHashMap);
-                lots.add(lot);
+                // avoiding to add the same lot again
+                if(lots.stream().filter(lot -> lot.getSignature().equals(signature)).toList().isEmpty()) {
+                    Lot lot = new Lot(signature, (int)linkedHashMap.get("number_of_bottles"), false, linkedHashMap);
+                    lots.add(lot);
+                }
+
             }
             String wineryPublicKey = getPublicKey(wineryKeys);
             wineries.put(key.toString(), new WineryData(wineryPublicKey, lots, false));
@@ -180,6 +190,7 @@ public class BolnisiProcessor {
         int sumBottles = 0;
         for (java.util.Map.Entry<String, WineryData> wineryDataEntry : offchainData.entrySet()) {
             for (Lot lot : wineryDataEntry.getValue().getLots()) {
+
                 if (lot.isValid()) {
                     sumBottles += lot.getNumberOfBottles();
                 }

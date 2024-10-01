@@ -5,9 +5,13 @@ import org.springframework.data.jpa.repository.Query;
 
 import org.cardanofoundation.bolnisiaggregator.model.entity.Winery;
 
-public interface WineryRepository extends JpaRepository<Winery, String> {
+import java.util.Optional;
+
+public interface WineryRepository extends JpaRepository<Winery, Long> {
 
     @Query("SELECT COUNT(w) FROM Winery w")
     int countAll();
+
+    Optional<Winery> findByWineryId(String wineryId);
 
 }
