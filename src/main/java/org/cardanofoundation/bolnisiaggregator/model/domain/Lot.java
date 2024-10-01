@@ -1,10 +1,10 @@
 package org.cardanofoundation.bolnisiaggregator.model.domain;
 
+import java.util.LinkedHashMap;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.LinkedHashMap;
 
 @Data
 @AllArgsConstructor

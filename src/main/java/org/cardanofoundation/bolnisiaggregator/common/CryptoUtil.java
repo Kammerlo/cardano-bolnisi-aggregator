@@ -1,5 +1,9 @@
 package org.cardanofoundation.bolnisiaggregator.common;
 
+import java.nio.charset.StandardCharsets;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.bloxbean.cardano.client.crypto.Blake2bUtil;
 import com.bloxbean.cardano.client.util.HexUtil;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -12,10 +16,7 @@ import com.nimbusds.jose.jwk.OctetKeyPair;
 import com.nimbusds.jose.util.Base64URL;
 import io.ipfs.multibase.Multibase;
 import io.ipfs.multihash.Multihash;
-import lombok.extern.slf4j.Slf4j;
 import org.erdtman.jcs.JsonCanonicalizer;
-
-import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class CryptoUtil {
