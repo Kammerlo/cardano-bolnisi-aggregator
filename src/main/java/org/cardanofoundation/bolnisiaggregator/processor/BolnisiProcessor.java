@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import org.cardanofoundation.bolnisiaggregator.model.entity.Winery;
+import org.cardanofoundation.bolnisiaggregator.model.repository.WineryRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -44,6 +46,8 @@ public class BolnisiProcessor {
     private String bolnisiPublicKeyUrl;
 
     private final RestTemplate restTemplate;
+
+    private final WineryRepository wineryRepository;
 
     public NumberOfBottlesAndCerts processTransaction(co.nstant.in.cbor.model.Map metadata) {
 
@@ -86,6 +90,8 @@ public class BolnisiProcessor {
 
         Map<String, WineryData> wineries = mapMetadataAndOffChainDataToObject(metadata, offChainData);
 
+        // saving all Wineries, these will be used to calculate the total number of wineries
+        wineryRepository.saveAll(wineries.keySet().stream().map(Winery::new).toList());
         // Verifying the signature
         removeWineriesWithWrongPK(wineries);
         verifyLotSignature(wineries);
