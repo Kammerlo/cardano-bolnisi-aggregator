@@ -90,12 +90,12 @@ public class BolnisiProcessor {
 
         Map<String, WineryData> wineries = mapMetadataAndOffChainDataToObject(metadata, offChainData);
 
-        // saving all Wineries, these will be used to calculate the total number of wineries
-        wineryRepository.saveAll(wineries.keySet().stream().map(Winery::new).toList());
         // Verifying the signature
         removeWineriesWithWrongPK(wineries);
         verifyLotSignature(wineries);
 
+        // saving all Wineries, these will be used to calculate the total number of wineries
+        wineryRepository.saveAll(wineries.keySet().stream().map(Winery::new).toList());
         return getSumOfBottlesForCID(wineries);
     }
 
